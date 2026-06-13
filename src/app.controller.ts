@@ -17,10 +17,18 @@ export class AppController {
   constructor(
     @Inject('USER_SERVICE')
     private userClient: ClientProxy,
+
+    @Inject('PRODUCT_SERVICE')
+    private readonly productClient: ClientProxy,
   ) {}
 
   @Get('/users')
   getUsers() {
     return this.userClient.send('get_users', {});
+  }
+
+  @Get('/products')
+  getProducts() {
+    return this.productClient.send('get_products', {});
   }
 }

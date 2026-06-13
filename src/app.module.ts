@@ -15,6 +15,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           port: 3001,
         },
       },
+      {
+        name: 'PRODUCT_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'product-service',
+          port: 3002,
+        },
+      },
     ]),
   ],
   controllers: [AppController],
