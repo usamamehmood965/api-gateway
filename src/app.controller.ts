@@ -1,34 +1,51 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Controller, Get, Inject, OnModuleInit } from '@nestjs/common';
+import { type ClientGrpc } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-/* @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+interface User {
+  id: string;
+  name: string;
+  email: string;
 }
- */
+
+interface UserServiceClient {
+  findAll(data: {}): Observable<{ users: User[] }>;
+}
+
+// interface Product {
+//   id: string;
+//   name: string;
+//   price: number;
+// }
+
+// interface ProductServiceClient {
+//   findAll(data: {}): Observable<{ products: Product[] }>;
+// }
 
 @Controller()
-export class AppController {
-  constructor(
-    @Inject('USER_SERVICE')
-    private userClient: ClientProxy,
+export class AppController implements OnModuleInit {
+  private userService: UserServiceClient;
+  // private productService: ProductServiceClient;
 
-    @Inject('PRODUCT_SERVICE')
-    private readonly productClient: ClientProxy,
+  constructor(
+    @Inject('USER_PACKAGE') private readonly userClient: ClientGrpc,
+    // @Inject('PRODUCT_PACKAGE') private readonly productClient: ClientGrpc,
   ) {}
+
+  onModuleInit() {
+    this.userService =
+      this.userClient.getService<UserServiceClient>('UserService');
+    // this.productService =
+    //   this.productClient.getService<ProductServiceClient>('ProductService');
+  }
 
   @Get('/users')
   getUsers() {
-    return this.userClient.send('get_users', {});
+    return this.userService.findAll({});
   }
 
-  @Get('/products')
-  getProducts() {
-    return this.productClient.send('get_products', {});
-  }
+  // @Get('/products')
+  // getProducts() {
+  //   return this.productService.findAll({});
+  // }
 }
