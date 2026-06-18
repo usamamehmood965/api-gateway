@@ -1,0 +1,16 @@
+// proto/user.proto
+syntax = "proto3";
+package order;
+
+service OrderService {
+  rpc FindOne (OrderById) returns (Order);
+  rpc FindAll (Empty) returns (OrderList);
+}
+
+message OrderById { string id = 1; }
+
+message Empty {}
+
+message Order { string id = 1; string name = 2; string email = 3; }
+
+message OrderList { repeated Order orders = 1; }

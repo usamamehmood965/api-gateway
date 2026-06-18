@@ -1,0 +1,16 @@
+// proto/user.proto
+syntax = "proto3";
+package product;
+
+service ProductService {
+  rpc FindOne (ProductById) returns (Product);
+  rpc FindAll (Empty) returns (ProductList);
+}
+
+message ProductById { string id = 1; }
+
+message Empty {}
+
+message Product { string id = 1; string name = 2; string email = 3; }
+
+message ProductList { repeated Product products = 1; }
